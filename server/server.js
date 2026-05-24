@@ -7,6 +7,8 @@ import http from 'http';
 import { Server } from 'socket.io';
 import connectDB from './config/db.js';
 import { initSocket } from './socket/socketHandler.js';
+import errorHandler from './middleware/errorMiddleware.js';
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -25,9 +27,11 @@ app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
+app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => res.send('SplitMate API Running...'));
 
+app.use(errorHandler);
 
 initSocket(io);
 
