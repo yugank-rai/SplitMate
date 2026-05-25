@@ -10,6 +10,7 @@ import { initSocket } from './socket/socketHandler.js';
 import errorHandler from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
 import groupRoutes from './routes/groupRoutes.js'
+import expenseRoutes from './routes/expenseRoutes.js'
 
 dotenv.config();
 connectDB();
@@ -30,6 +31,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/api/expenses', expenseRoutes);
 
 app.get('/', (req, res) => res.send('SplitMate API Running...'));
 
