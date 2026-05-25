@@ -1,39 +1,46 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/common/DashboardLayout.jsx';
 import BalanceCard from '../components/dashboard/BalanceCard.jsx';
 import SpendingPieChart from '../components/dashboard/SpendingPieChart.jsx';
 import MonthlyBarChart from '../components/dashboard/MonthlyBarChart.jsx';
 import ActivityFeed from '../components/dashboard/ActivityFeed.jsx';
 import useAuth from '../hooks/useAuth.js';
+import {
+  getDashboardStatsApi,
+  getSpendingByCategoryApi,
+  getMonthlyTrendApi,
+} from '../api/statsApi.js';
 import '../styles/dashboard.css';
-
-// Dummy data (we'll replace with real API later)
-const dummyPieData = [
-  { name: 'Food', value: 3200 },
-  { name: 'Travel', value: 5400 },
-  { name: 'Rent', value: 8000 },
-  { name: 'Shopping', value: 1200 },
-  { name: 'Entertainment', value: 900 },
-];
-
-const dummyBarData = [
-  { month: 'Jan', amount: 4200 },
-  { month: 'Feb', amount: 3800 },
-  { month: 'Mar', amount: 6100 },
-  { month: 'Apr', amount: 2900 },
-  { month: 'May', amount: 5200 },
-  { month: 'Jun', amount: 4700 },
-];
-
-const dummyActivities = [
-  { action: 'Rahul added ₹500 in Manali Trip', createdAt: new Date(Date.now() - 1000 * 60 * 5) },
-  { action: 'Priya settled ₹600 with you', createdAt: new Date(Date.now() - 1000 * 60 * 60) },
-  { action: 'You were added to Home Expenses', createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24) },
-  { action: 'Amit added ₹1200 in Office Lunch', createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48) },
-];
 
 const DashboardPage = () => {
   const { user } = useAuth();
+
+  const [stats, setStats] = useState(null);
+  const [pieData, setPieData] = useState([]);
+  const [barData, setBarData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAll();
+  }, []);
+
+  const fetchAll = async () => {
+    try {
+      const [statsData, pieData, barData] = await Promise.all([
+        getDashboardStatsApi(),
+        getSpendingByCategoryApi(),
+        getMonthlyTrendApi(),
+      ]);
+      setStats(statsData);
+      setPieData(pieData);
+      setBarData(barData);
+    } catch (err) {
+      console.error('Failed to load dashboard data', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -45,47 +52,122 @@ const DashboardPage = () => {
             <h1>Hello, {user?.name?.split(' ')[0]} 👋</h1>
             <p>Here's your expense summary</p>
           </div>
-          <button className='btn btn-primary'>+ Add Expense</button>
+          <Link to='/groups' className='btn btn-primary'>
+            + Add Expense
+          </Link>
         </div>
 
         {/* Balance Cards */}
-        <div className='balance-cards'>
-          <BalanceCard
-            title='Total You Are Owed'
-            amount={user?.totalOwed || 1500}
-            type='owed'
-            icon='💰'
-          />
-          <BalanceCard
-            title='Total You Owe'
-            amount={user?.totalOwe || 800}
-            type='owe'
-            icon='💸'
-          />
-          <BalanceCard
-            title='Total Settled'
-            amount={3200}
-            type='settled'
-            icon='✅'
-          />
-        </div>
+        {loading ? (
+          <div className='balance-cards'>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className='balance-card-skeleton' />
+            ))}
+          </div>
+        ) : (
+          <div className='balance-cards'>
+            <BalanceCard
+              title='Total You Are Owed'
+              amount={stats?.totalOwed || 0}
+              type='owed'
+              icon='💰'
+            />
+            <BalanceCard
+              title='Total You Owe'
+              amount={stats?.totalOwe || 0}
+              type='owe'
+              icon='💸'
+            />
+            <BalanceCard
+              title='Total Groups'
+              amount={stats?.totalGroups || 0}
+              type='settled'
+              icon='👥'
+              isCount={true}
+            />
+          </div>
+        )}
+
+        {/* Quick Stats */}
+        {!loading && (
+          <div className='quick-stats'>
+            <div className='quick-stat'>
+              <span className='quick-stat-icon'>🧾</span>
+              <div>
+                <p className='quick-stat-value'>{stats?.totalExpenses || 0}</p>
+                <p className='quick-stat-label'>Total Expenses</p>
+              </div>
+            </div>
+            <div className='quick-stat'>
+              <span className='quick-stat-icon'>📊</span>
+              <div>
+                <p className='quick-stat-value'>{pieData.length}</p>
+                <p className='quick-stat-label'>Categories Used</p>
+              </div>
+            </div>
+            <div className='quick-stat'>
+              <span className='quick-stat-icon'>📅</span>
+              <div>
+                <p className='quick-stat-value'>
+                  {barData.find(b => b.amount > 0) ? 
+                    `₹${Math.max(...barData.map(b => b.amount)).toLocaleString()}` 
+                    : '₹0'}
+                </p>
+                <p className='quick-stat-label'>Highest Month</p>
+              </div>
+            </div>
+            <div className='quick-stat'>
+              <span className='quick-stat-icon'>💵</span>
+              <div>
+                <p className='quick-stat-value'>
+                  ₹{pieData.reduce((sum, d) => sum + d.value, 0).toLocaleString()}
+                </p>
+                <p className='quick-stat-label'>Total Spent</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Charts Row */}
         <div className='dashboard-charts'>
           <div className='chart-card'>
             <h3>Spending by Category</h3>
-            <SpendingPieChart data={dummyPieData} />
+            {loading ? (
+              <div className='chart-skeleton' />
+            ) : pieData.length === 0 ? (
+              <div className='chart-empty'>
+                <span>📊</span>
+                <p>No spending data yet</p>
+                <p>Add expenses to see your breakdown</p>
+              </div>
+            ) : (
+              <SpendingPieChart data={pieData} />
+            )}
           </div>
+
           <div className='chart-card'>
             <h3>Monthly Spending</h3>
-            <MonthlyBarChart data={dummyBarData} />
+            {loading ? (
+              <div className='chart-skeleton' />
+            ) : (
+              <MonthlyBarChart data={barData} />
+            )}
           </div>
         </div>
 
         {/* Recent Activity */}
         <div className='dashboard-activity'>
-          <h3>Recent Activity</h3>
-          <ActivityFeed activities={dummyActivities} />
+          <div className='activity-header'>
+            <h3>Recent Activity</h3>
+            <Link to='/groups' className='activity-view-all'>
+              View Groups →
+            </Link>
+          </div>
+          {loading ? (
+            <div className='activity-skeleton' />
+          ) : (
+            <ActivityFeed activities={stats?.activity || []} />
+          )}
         </div>
 
       </div>

@@ -5,7 +5,9 @@ const ActivityFeed = ({ activities }) => {
   if (!activities || activities.length === 0) {
     return (
       <div className='activity-empty'>
-        <p>No recent activity</p>
+        <span>📭</span>
+        <p>No recent activity yet</p>
+        <p>Create a group and add expenses to see activity here!</p>
       </div>
     );
   }
