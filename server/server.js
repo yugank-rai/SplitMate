@@ -7,10 +7,11 @@ import http from 'http';
 import { Server } from 'socket.io';
 import connectDB from './config/db.js';
 import { initSocket } from './socket/socketHandler.js';
-import errorHandler from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
 import groupRoutes from './routes/groupRoutes.js'
 import expenseRoutes from './routes/expenseRoutes.js'
+import settlementRoutes from './routes/settlementRoutes.js';
+import errorHandler from './middleware/errorMiddleware.js';
 
 dotenv.config();
 connectDB();
@@ -29,14 +30,13 @@ app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
+
 app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/expenses', expenseRoutes);
-
-app.get('/', (req, res) => res.send('SplitMate API Running...'));
+app.use('/api/settlements', settlementRoutes);
 
 app.use(errorHandler);
-
 initSocket(io);
 
 const PORT = process.env.PORT || 5000;

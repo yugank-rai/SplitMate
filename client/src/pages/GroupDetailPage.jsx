@@ -5,12 +5,16 @@ import toast from 'react-hot-toast';
 import DashboardLayout from '../components/common/DashboardLayout.jsx';
 import ExpenseCard from '../components/expenses/ExpenseCard.jsx';
 import ExpenseForm from '../components/expenses/ExpenseForm.jsx';
+import BalanceSummary from '../components/settlements/BalanceSummary.jsx';
+import SettleUpModal from '../components/settlements/SettleUpModal.jsx';
 import { getGroupByIdApi, addMemberApi, deleteGroupApi } from '../api/groupApi.js';
 import { getExpensesApi, deleteExpenseApi } from '../api/expenseApi.js';
+import { getGroupBalancesApi } from '../api/settlementApi.js';
 import useAuth from '../hooks/useAuth.js';
 import '../styles/groups.css';
 import '../styles/groupDetail.css';
 import '../styles/expenses.css';
+import '../styles/settlements.css';
 
 const GroupDetailPage = () => {
   const { id } = useParams();
@@ -19,24 +23,29 @@ const GroupDetailPage = () => {
 
   const [group, setGroup] = useState(null);
   const [expenses, setExpenses] = useState([]);
+  const [balances, setBalances] = useState([]);
+  const [totalExpenses, setTotalExpenses] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('expenses');
   const [showAddMember, setShowAddMember] = useState(false);
   const [showExpenseForm, setShowExpenseForm] = useState(false);
+  const [settleBalance, setSettleBalance] = useState(null);
   const [memberEmail, setMemberEmail] = useState('');
   const [addingMember, setAddingMember] = useState(false);
 
-  useEffect(() => {
-    fetchAll();
-  }, [id]);
+  useEffect(() => { fetchAll(); }, [id]);
 
   const fetchAll = async () => {
     try {
-      const [groupData, expenseData] = await Promise.all([
+      const [groupData, expenseData, balanceData] = await Promise.all([
         getGroupByIdApi(id),
         getExpensesApi(id),
+        getGroupBalancesApi(id),
       ]);
       setGroup(groupData);
       setExpenses(expenseData);
+      setBalances(balanceData.balances);
+      setTotalExpenses(balanceData.totalExpenses);
     } catch (err) {
       toast.error('Failed to load group');
       navigate('/groups');
@@ -64,6 +73,7 @@ const GroupDetailPage = () => {
   const handleExpenseAdded = (newExpense) => {
     setExpenses([newExpense, ...expenses]);
     setGroup((prev) => ({ ...prev, totalExpenses: prev.totalExpenses + 1 }));
+    fetchAll(); // refresh balances
   };
 
   const handleDeleteExpense = async (expenseId) => {
@@ -71,7 +81,7 @@ const GroupDetailPage = () => {
     try {
       await deleteExpenseApi(expenseId);
       setExpenses(expenses.filter((e) => e._id !== expenseId));
-      setGroup((prev) => ({ ...prev, totalExpenses: prev.totalExpenses - 1 }));
+      fetchAll(); // refresh balances
       toast.success('Expense deleted');
     } catch (err) {
       toast.error('Failed to delete expense');
@@ -85,7 +95,7 @@ const GroupDetailPage = () => {
       toast.success('Group deleted');
       navigate('/groups');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to delete group');
+      toast.error(err.response?.data?.message || 'Failed to delete');
     }
   };
 
@@ -111,7 +121,7 @@ const GroupDetailPage = () => {
             <span className='group-detail-icon'>{group?.icon}</span>
             <div>
               <h1>{group?.name}</h1>
-              <p>{group?.type} • {group?.members?.length} members • {expenses.length} expenses</p>
+              <p>{group?.type} • {group?.members?.length} members</p>
             </div>
           </div>
           {isAdmin && (
@@ -121,14 +131,37 @@ const GroupDetailPage = () => {
           )}
         </div>
 
+        {/* Stats Row */}
+        <div className='group-stats-row'>
+          <div className='group-stat-card'>
+            <p className='group-stat-label'>Total Spent</p>
+            <p className='group-stat-value'>₹{totalExpenses.toLocaleString()}</p>
+          </div>
+          <div className='group-stat-card'>
+            <p className='group-stat-label'>Expenses</p>
+            <p className='group-stat-value'>{expenses.length}</p>
+          </div>
+          <div className='group-stat-card'>
+            <p className='group-stat-label'>Members</p>
+            <p className='group-stat-value'>{group?.members?.length}</p>
+          </div>
+          <div className='group-stat-card'>
+            <p className='group-stat-label'>Pending Balances</p>
+            <p className='group-stat-value'>{balances.length}</p>
+          </div>
+        </div>
+
         <div className='group-detail-body'>
 
-          {/* Members */}
+          {/* Members Sidebar */}
           <div className='group-detail-members card'>
             <div className='card-header'>
               <h3>Members ({group?.members?.length})</h3>
               {isAdmin && (
-                <button className='btn btn-outline' onClick={() => setShowAddMember(!showAddMember)}>
+                <button
+                  className='btn btn-outline'
+                  onClick={() => setShowAddMember(!showAddMember)}
+                >
                   <UserPlus size={16} /> Add
                 </button>
               )}
@@ -143,7 +176,11 @@ const GroupDetailPage = () => {
                   onChange={(e) => setMemberEmail(e.target.value)}
                   required
                 />
-                <button type='submit' className='btn btn-primary' disabled={addingMember}>
+                <button
+                  type='submit'
+                  className='btn btn-primary'
+                  disabled={addingMember}
+                >
                   {addingMember ? '...' : 'Add'}
                 </button>
               </form>
@@ -160,40 +197,80 @@ const GroupDetailPage = () => {
                   <div className='member-info'>
                     <p className='member-name'>
                       {m.user?.name}
-                      {m.user?._id === user?._id && <span className='member-you'> (You)</span>}
+                      {m.user?._id === user?._id && (
+                        <span className='member-you'> (You)</span>
+                      )}
                     </p>
                     <p className='member-email'>{m.user?.email}</p>
                   </div>
-                  <span className={`member-role member-role-${m.role}`}>{m.role}</span>
+                  <span className={`member-role member-role-${m.role}`}>
+                    {m.role}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Expenses */}
-          <div className='group-detail-expenses card'>
-            <div className='card-header'>
-              <h3>Expenses ({expenses.length})</h3>
-              <button className='btn btn-primary' onClick={() => setShowExpenseForm(true)}>
-                + Add Expense
+          {/* Main Content with Tabs */}
+          <div className='group-detail-main'>
+            {/* Tabs */}
+            <div className='group-tabs'>
+              <button
+                className={`group-tab ${activeTab === 'expenses' ? 'group-tab-active' : ''}`}
+                onClick={() => setActiveTab('expenses')}
+              >
+                🧾 Expenses ({expenses.length})
+              </button>
+              <button
+                className={`group-tab ${activeTab === 'balances' ? 'group-tab-active' : ''}`}
+                onClick={() => setActiveTab('balances')}
+              >
+                ⚖️ Balances ({balances.length})
               </button>
             </div>
 
-            {expenses.length === 0 ? (
-              <div className='expenses-empty'>
-                <span>🧾</span>
-                <p>No expenses yet</p>
-                <p>Add the first expense to get started!</p>
+            {/* Expenses Tab */}
+            {activeTab === 'expenses' && (
+              <div className='card'>
+                <div className='card-header'>
+                  <h3>All Expenses</h3>
+                  <button
+                    className='btn btn-primary'
+                    onClick={() => setShowExpenseForm(true)}
+                  >
+                    + Add Expense
+                  </button>
+                </div>
+                {expenses.length === 0 ? (
+                  <div className='expenses-empty'>
+                    <span>🧾</span>
+                    <p>No expenses yet</p>
+                    <p>Add the first expense!</p>
+                  </div>
+                ) : (
+                  <div className='expenses-list'>
+                    {expenses.map((expense) => (
+                      <ExpenseCard
+                        key={expense._id}
+                        expense={expense}
+                        onDelete={handleDeleteExpense}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className='expenses-list'>
-                {expenses.map((expense) => (
-                  <ExpenseCard
-                    key={expense._id}
-                    expense={expense}
-                    onDelete={handleDeleteExpense}
-                  />
-                ))}
+            )}
+
+            {/* Balances Tab */}
+            {activeTab === 'balances' && (
+              <div className='card'>
+                <div className='card-header'>
+                  <h3>Who Owes What</h3>
+                </div>
+                <BalanceSummary
+                  balances={balances}
+                  onSettleUp={(balance) => setSettleBalance(balance)}
+                />
               </div>
             )}
           </div>
@@ -201,12 +278,21 @@ const GroupDetailPage = () => {
         </div>
       </div>
 
-      {/* Add Expense Modal */}
+      {/* Modals */}
       {showExpenseForm && (
         <ExpenseForm
           onClose={() => setShowExpenseForm(false)}
           onExpenseAdded={handleExpenseAdded}
           group={group}
+        />
+      )}
+
+      {settleBalance && (
+        <SettleUpModal
+          balance={settleBalance}
+          groupId={id}
+          onClose={() => setSettleBalance(null)}
+          onSettled={fetchAll}
         />
       )}
 
