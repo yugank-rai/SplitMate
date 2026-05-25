@@ -11,6 +11,7 @@ import AllExpensesPage from './pages/AllExpensesPage.jsx';
 import BalancesPage from './pages/BalancesPage.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import GroupDeatailPage from './pages/GroupDetailPage.jsx'
 
 function App() {
   const { user } = useAuth();
@@ -20,7 +21,7 @@ function App() {
       <Route path='/' element={<LandingPage />} />
       <Route path='/login' element={user ? <Navigate to='/dashboard' /> : <LoginPage />} />
       <Route path='/register' element={user ? <Navigate to='/dashboard' /> : <RegisterPage />} />
-
+<Route path='/groups/:id' element={<protectedRoute><GroupDeatailPage /></protectedRoute>} />
       <Route path='/dashboard' element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
       <Route path='/groups' element={<ProtectedRoute><GroupsPage /></ProtectedRoute>} />
       <Route path='/expenses' element={<ProtectedRoute><AllExpensesPage /></ProtectedRoute>} />

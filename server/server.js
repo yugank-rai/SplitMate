@@ -9,6 +9,7 @@ import connectDB from './config/db.js';
 import { initSocket } from './socket/socketHandler.js';
 import errorHandler from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
+import groupRoutes from './routes/groupRoutes.js'
 
 dotenv.config();
 connectDB();
@@ -28,6 +29,7 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use('/api/auth', authRoutes);
+app.use('/api/groups', groupRoutes);
 
 app.get('/', (req, res) => res.send('SplitMate API Running...'));
 
