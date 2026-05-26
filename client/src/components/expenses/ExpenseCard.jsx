@@ -43,10 +43,14 @@ const ExpenseCard = ({ expense, onDelete }) => {
       </div>
 
       <div className='expense-card-right'>
-        <p className='expense-total-amount'>₹{expense.amount.toLocaleString()}</p>
+        <p className='expense-total-amount'>
+          ₹{expense.amount.toLocaleString()}
+        </p>
         {mySplit && (
           <p className={`expense-my-share ${paidByMe ? 'share-positive' : 'share-negative'}`}>
-            {paidByMe ? 'You paid' : `Your share: ₹${myplit?.amount?.toLocaleString()}`}
+            {paidByMe
+              ? 'You paid'
+              : `Your share: ₹${mySplit?.amount?.toLocaleString()}`}
           </p>
         )}
         {paidByMe && (

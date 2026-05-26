@@ -168,3 +168,21 @@
 .nav-dropdown-logout {
   color: var(--danger);
 }
+
+.theme-toggle {
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+  color: var(--primary);
+  background: rgba(108, 99, 255, 0.1);
+}
+
+[data-theme='dark'] .theme-toggle {
+  color: #f4a261;
+}
+
+[data-theme='dark'] .theme-toggle:hover {
+  background: rgba(244, 162, 97, 0.1);
+}

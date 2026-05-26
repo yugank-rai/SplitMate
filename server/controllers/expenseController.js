@@ -1,3 +1,5 @@
+import { io } from '../server.js';
+import { createNotification } from '../utils/createNotification.js';
 import asyncHandler from 'express-async-handler';
 import Expense from '../models/Expense.js';
 import Group from '../models/Group.js';
@@ -113,6 +115,22 @@ export const addExpense = asyncHandler(async (req, res) => {
 
   await expense.populate('paidBy', 'name email avatar');
   await expense.populate('splits.user', 'name email avatar');
+
+  // Send notifications to all group members except the one who added
+  const recipientIds = group.members
+    .map((m) => m.user.toString())
+    .filter((id) => id !== req.user._id.toString());
+
+  if (recipientIds.length > 0) {
+    await createNotification({
+      recipients: recipientIds,
+      sender: req.user._id,
+      type: 'expense_added',
+      message: `${req.user.name} added ₹${amount} for "${title}" in ${group.name}`,
+      group: groupId,
+      io,
+    });
+  }
 
   res.status(201).json(expense);
 });

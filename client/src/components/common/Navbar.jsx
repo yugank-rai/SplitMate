@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, LogOut, User, Menu, X } from 'lucide-react';
+import { LogOut, User, Menu, X, Sun, Moon } from 'lucide-react';
 import useAuth from '../../hooks/useAuth.js';
+import NotificationBell from '../notifications/NotificationBell.jsx';
+import { ThemeContext } from '../../context/ThemeContext.jsx';
 import '../../styles/navbar.css';
 
 const Navbar = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { darkMode, toggleTheme } = useContext(ThemeContext);
 
   const handleLogout = () => {
     logout();
@@ -27,11 +30,15 @@ const Navbar = ({ onMenuClick }) => {
       </div>
 
       <div className='navbar-right'>
-        <Link to='/notifications' className='nav-icon-btn'>
-          <Bell size={20} />
-          <span className='notif-badge'>3</span>
-        </Link>
+        {/* Dark Mode Toggle */}
+        <button className='nav-icon-btn theme-toggle' onClick={toggleTheme} title='Toggle theme'>
+          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
 
+        {/* Notifications */}
+        <NotificationBell />
+
+        {/* Avatar */}
         <div className='nav-avatar-wrap'>
           <button
             className='nav-avatar-btn'
@@ -59,6 +66,13 @@ const Navbar = ({ onMenuClick }) => {
               >
                 <User size={16} /> Profile
               </Link>
+              <button
+                className='nav-dropdown-item'
+                onClick={toggleTheme}
+              >
+                {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+                {darkMode ? 'Light Mode' : 'Dark Mode'}
+              </button>
               <button
                 className='nav-dropdown-item nav-dropdown-logout'
                 onClick={handleLogout}

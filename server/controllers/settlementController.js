@@ -1,3 +1,5 @@
+import { io } from '../server.js';
+import { createNotification } from '../utils/createNotification.js';
 import asyncHandler from 'express-async-handler';
 import Settlement from '../models/Settlement.js';
 import Expense from '../models/Expense.js';
@@ -95,6 +97,16 @@ export const settleUp = asyncHandler(async (req, res) => {
 
   await settlement.populate('from', 'name email avatar');
   await settlement.populate('to', 'name email avatar');
+
+  // Notify the person who received the settlement
+  await createNotification({
+    recipients: [toUserId],
+    sender: req.user._id,
+    type: 'settled_up',
+    message: `${req.user.name} settled ₹${amount} with you`,
+    group: groupId,
+    io,
+  });
 
   res.status(201).json(settlement);
 });
