@@ -12,6 +12,7 @@ import groupRoutes from './routes/groupRoutes.js'
 import expenseRoutes from './routes/expenseRoutes.js'
 import settlementRoutes from './routes/settlementRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
+import userRoutes from './routes/userRoutes.js'
 import errorHandler from './middleware/errorMiddleware.js';
 
 dotenv.config();
@@ -33,6 +34,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/settlements', settlementRoutes);

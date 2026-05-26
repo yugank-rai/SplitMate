@@ -52,7 +52,7 @@ const DashboardPage = () => {
             <h1>Hello, {user?.name?.split(' ')[0]} 👋</h1>
             <p>Here's your expense summary</p>
           </div>
-          <Link to='/groups' className='btn btn-primary'>
+          <Link to='/expenses' className='btn btn-primary'>
             + Add Expense
           </Link>
         </div>
