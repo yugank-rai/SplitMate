@@ -98,7 +98,6 @@ const ProfilePage = () => {
     <DashboardLayout>
       <div className='profile-page'>
 
-        {/* Header */}
         <div className='profile-header'>
           <h1>My Profile</h1>
           <p>Manage your account settings</p>
@@ -106,10 +105,8 @@ const ProfilePage = () => {
 
         <div className='profile-body'>
 
-          {/* Left — Avatar + Stats */}
           <div className='profile-left'>
 
-            {/* Avatar Card */}
             <div className='card profile-avatar-card'>
               <div className='profile-avatar'>
                 {profile?.avatar ? (
@@ -127,7 +124,6 @@ const ProfilePage = () => {
               </p>
             </div>
 
-            {/* Stats Card */}
             <div className='card profile-stats-card'>
               <h3>Your Stats</h3>
               <div className='profile-stats'>
@@ -164,10 +160,9 @@ const ProfilePage = () => {
 
           </div>
 
-          {/* Right — Edit Forms */}
           <div className='profile-right'>
 
-            {/* Edit Name */}
+           
             <div className='card profile-section'>
               <div className='profile-section-header'>
                 <div className='profile-section-icon'>

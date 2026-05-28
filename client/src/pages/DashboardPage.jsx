@@ -46,7 +46,6 @@ const DashboardPage = () => {
     <DashboardLayout>
       <div className='dashboard'>
 
-        {/* Header */}
         <div className='dashboard-header'>
           <div>
             <h1>Hello, {user?.name?.split(' ')[0]} 👋</h1>
@@ -57,7 +56,7 @@ const DashboardPage = () => {
           </Link>
         </div>
 
-        {/* Balance Cards */}
+  
         {loading ? (
           <div className='balance-cards'>
             {[1, 2, 3].map((i) => (
@@ -88,7 +87,7 @@ const DashboardPage = () => {
           </div>
         )}
 
-        {/* Quick Stats */}
+  
         {!loading && (
           <div className='quick-stats'>
             <div className='quick-stat'>
@@ -128,7 +127,7 @@ const DashboardPage = () => {
           </div>
         )}
 
-        {/* Charts Row */}
+
         <div className='dashboard-charts'>
           <div className='chart-card'>
             <h3>Spending by Category</h3>
@@ -155,7 +154,6 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Recent Activity */}
         <div className='dashboard-activity'>
           <div className='activity-header'>
             <h3>Recent Activity</h3>

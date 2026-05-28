@@ -35,7 +35,6 @@ const GroupsPage = () => {
     <DashboardLayout>
       <div className='groups-page'>
 
-        {/* Header */}
         <div className='page-header'>
           <div>
             <h1>My Groups</h1>
@@ -50,7 +49,6 @@ const GroupsPage = () => {
           </button>
         </div>
 
-        {/* Groups Grid */}
         {loading ? (
           <div className='groups-loading'>
             {[1, 2, 3].map((i) => (
@@ -78,7 +76,6 @@ const GroupsPage = () => {
           </div>
         )}
 
-        {/* Create Group Modal */}
         {showForm && (
           <GroupForm
             onClose={() => setShowForm(false)}

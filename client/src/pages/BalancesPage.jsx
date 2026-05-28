@@ -32,7 +32,6 @@ const BalancesPage = () => {
         })
       );
 
-      // Calculate overall totals
       let owed = 0;
       let owe = 0;
       balanceResults.forEach(({ balances }) => {
@@ -56,7 +55,6 @@ const BalancesPage = () => {
     <DashboardLayout>
       <div style={{ maxWidth: '900px', margin: '0 auto' }}>
 
-        {/* Header */}
         <div className='page-header'>
           <div>
             <h1>Overall Balances</h1>
@@ -64,7 +62,6 @@ const BalancesPage = () => {
           </div>
         </div>
 
-        {/* Summary Cards */}
         {!loading && (
           <div style={{
             display: 'grid',
@@ -111,7 +108,6 @@ const BalancesPage = () => {
           </div>
         )}
 
-        {/* Per Group Balances */}
         {loading ? (
           <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)' }}>
             Loading...
@@ -131,7 +127,6 @@ const BalancesPage = () => {
             {groupBalances.map(({ group, balances, totalExpenses }) => (
               <div key={group._id} className='card' style={{ padding: '24px' }}>
 
-                {/* Group Header */}
                 <div style={{
                   display: 'flex', alignItems: 'center',
                   justifyContent: 'space-between', marginBottom: '16px',
@@ -155,7 +150,6 @@ const BalancesPage = () => {
                   </button>
                 </div>
 
-                {/* Balances */}
                 {balances.length === 0 ? (
                   <div style={{
                     padding: '16px',
@@ -184,7 +178,6 @@ const BalancesPage = () => {
                           gap: '12px',
                         }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            {/* From Avatar */}
                             <div style={{
                               width: '36px', height: '36px', borderRadius: '50%',
                               background: 'linear-gradient(135deg, var(--primary), #a855f7)',
@@ -196,7 +189,6 @@ const BalancesPage = () => {
 
                             <span style={{ color: 'var(--text-secondary)', fontSize: '18px' }}>→</span>
 
-                            {/* To Avatar */}
                             <div style={{
                               width: '36px', height: '36px', borderRadius: '50%',
                               background: 'linear-gradient(135deg, var(--success), #06b6d4)',

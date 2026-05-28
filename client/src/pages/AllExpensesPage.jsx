@@ -64,7 +64,6 @@ const AllExpensesPage = () => {
     <DashboardLayout>
       <div style={{ maxWidth: '900px', margin: '0 auto' }}>
 
-        {/* Header */}
         <div className='page-header'>
           <div>
             <h1>All Expenses</h1>
@@ -72,7 +71,6 @@ const AllExpensesPage = () => {
           </div>
         </div>
 
-        {/* Summary Cards */}
         {!loading && (
           <div style={{
             display: 'grid',
@@ -105,9 +103,8 @@ const AllExpensesPage = () => {
           </div>
         )}
 
-        {/* Filters */}
         <div className='card' style={{ padding: '16px', marginBottom: '20px' }}>
-          {/* Search */}
+      
           <input
             type='text'
             placeholder='🔍 Search expenses...'
@@ -126,7 +123,6 @@ const AllExpensesPage = () => {
             }}
           />
 
-          {/* Category Filter */}
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {CATEGORIES.map((cat) => (
               <button
@@ -151,7 +147,6 @@ const AllExpensesPage = () => {
           </div>
         </div>
 
-        {/* Expenses List */}
         <div className='card' style={{ padding: '8px' }}>
           {loading ? (
             <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)' }}>
@@ -193,7 +188,6 @@ const AllExpensesPage = () => {
                   onMouseEnter={e => e.currentTarget.style.background = 'var(--bg)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                   >
-                    {/* Icon */}
                     <div style={{
                       width: '48px', height: '48px',
                       background: 'var(--bg)',
@@ -205,7 +199,6 @@ const AllExpensesPage = () => {
                       {CATEGORY_ICONS[expense.category] || '📦'}
                     </div>
 
-                    {/* Info */}
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                         <p style={{ fontWeight: '700', fontSize: '15px' }}>{expense.title}</p>
@@ -224,7 +217,6 @@ const AllExpensesPage = () => {
                       </p>
                     </div>
 
-                    {/* Amount */}
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
                       <p style={{ fontSize: '18px', fontWeight: '800' }}>
                         ₹{expense.amount.toLocaleString()}

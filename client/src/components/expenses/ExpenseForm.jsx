@@ -74,7 +74,7 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Title */}
+
           <div className='form-group'>
             <label>Title</label>
             <input
@@ -87,7 +87,6 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
             />
           </div>
 
-          {/* Amount & Date */}
           <div className='form-row'>
             <div className='form-group'>
               <label>Amount (₹)</label>
@@ -112,7 +111,6 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
             </div>
           </div>
 
-          {/* Category */}
           <div className='form-group'>
             <label>Category</label>
             <div className='category-selector'>
@@ -129,7 +127,6 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
             </div>
           </div>
 
-          {/* Paid By */}
           <div className='form-group'>
             <label>Paid By</label>
             <select
@@ -146,7 +143,6 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
             </select>
           </div>
 
-          {/* Split Type */}
           <div className='form-group'>
             <label>Split Type</label>
             <div className='split-type-selector'>
@@ -165,7 +161,6 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
             </div>
           </div>
 
-          {/* Custom Splits */}
           {formData.splitType !== 'equal' && (
             <div className='form-group'>
               <label>
@@ -193,7 +188,6 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
             </div>
           )}
 
-          {/* Note */}
           <div className='form-group'>
             <label>Note (optional)</label>
             <input

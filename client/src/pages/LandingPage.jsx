@@ -66,7 +66,7 @@ const LandingPage = () => {
   return (
     <div className='landing'>
 
-      {/* Navbar */}
+
       <nav className='landing-nav'>
         <div className='landing-nav-brand'>
           <span>💸</span>
@@ -82,7 +82,6 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero */}
       <section className='hero'>
         <div className='hero-badge'>✨ Free for personal use</div>
         <h1 className='hero-title'>
@@ -103,17 +102,16 @@ const LandingPage = () => {
           </Link>
         </div></section>
 
-       {/* Hero Visual */}
+    
 <div className='hero-visual'>
   <div className='hero-illustration'>
 
-    {/* Center Circle */}
+  
     <div className='illus-center'>
       <span>💸</span>
       <p>SplitMate</p>
     </div>
 
-    {/* Orbiting Cards */}
     <div className='illus-card illus-card-1'>
       <span>🏔️</span>
       <div>
@@ -146,7 +144,7 @@ const LandingPage = () => {
       </div>
     </div>
 
-    {/* Connecting Lines (SVG) */}
+  
     <svg className='illus-lines' viewBox='0 0 400 400'>
       <line x1='200' y1='200' x2='80' y2='80' stroke='#6c63ff' strokeWidth='1.5' strokeDasharray='6 4' opacity='0.3' />
       <line x1='200' y1='200' x2='320' y2='80' stroke='#6c63ff' strokeWidth='1.5' strokeDasharray='6 4' opacity='0.3' />
@@ -158,32 +156,6 @@ const LandingPage = () => {
 
   </div>
 </div>
-
-          {/* Floating Cards
-          <div className='hero-float hero-float-1'>
-            <span>✅</span>
-            <div>
-              <p>Rahul settled up</p>
-              <p>₹600 • just now</p>
-            </div>
-          </div>
-          <div className='hero-float hero-float-2'>
-            <span>🔔</span>
-            <div>
-              <p>New expense added</p>
-              <p>Food • ₹800</p>
-            </div>
-          </div>
-          <div className='hero-float hero-float-3'>
-            <span>⚖️</span>
-            <div>
-              <p>All settled up!</p>
-              <p>Manali Trip</p>
-            </div>
-          </div>
-        // </section> */}
-
-      {/* Stats */}
       <section className='landing-stats'>
         {stats.map((stat, i) => (
           <div key={i} className='landing-stat'>
@@ -193,7 +165,6 @@ const LandingPage = () => {
         ))}
       </section>
 
-      {/* Features */}
       <section className='landing-features' id='features'>
         <div className='section-header'>
           <span className='section-badge'>Features</span>
@@ -211,7 +182,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* How it works */}
       <section className='how-it-works' id='how-it-works'>
         <div className='section-header'>
           <span className='section-badge'>How it works</span>
@@ -233,7 +203,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className='landing-cta'>
         <div className='landing-cta-inner'>
           <h2>Ready to split smarter?</h2>
@@ -247,7 +216,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className='landing-footer'>
         <div className='footer-brand'>
           <span>💸</span>

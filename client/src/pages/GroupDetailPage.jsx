@@ -73,7 +73,7 @@ const GroupDetailPage = () => {
   const handleExpenseAdded = (newExpense) => {
     setExpenses([newExpense, ...expenses]);
     setGroup((prev) => ({ ...prev, totalExpenses: prev.totalExpenses + 1 }));
-    fetchAll(); // refresh balances
+    fetchAll(); 
   };
 
   const handleDeleteExpense = async (expenseId) => {
@@ -81,7 +81,7 @@ const GroupDetailPage = () => {
     try {
       await deleteExpenseApi(expenseId);
       setExpenses(expenses.filter((e) => e._id !== expenseId));
-      fetchAll(); // refresh balances
+      fetchAll();
       toast.success('Expense deleted');
     } catch (err) {
       toast.error('Failed to delete expense');
@@ -112,7 +112,6 @@ const GroupDetailPage = () => {
     <DashboardLayout>
       <div className='group-detail'>
 
-        {/* Header */}
         <div className='group-detail-header'>
           <button className='back-btn' onClick={() => navigate('/groups')}>
             <ArrowLeft size={20} /> Back
@@ -131,7 +130,6 @@ const GroupDetailPage = () => {
           )}
         </div>
 
-        {/* Stats Row */}
         <div className='group-stats-row'>
           <div className='group-stat-card'>
             <p className='group-stat-label'>Total Spent</p>
@@ -153,7 +151,6 @@ const GroupDetailPage = () => {
 
         <div className='group-detail-body'>
 
-          {/* Members Sidebar */}
           <div className='group-detail-members card'>
             <div className='card-header'>
               <h3>Members ({group?.members?.length})</h3>
@@ -211,9 +208,8 @@ const GroupDetailPage = () => {
             </div>
           </div>
 
-          {/* Main Content with Tabs */}
           <div className='group-detail-main'>
-            {/* Tabs */}
+
             <div className='group-tabs'>
               <button
                 className={`group-tab ${activeTab === 'expenses' ? 'group-tab-active' : ''}`}
@@ -229,7 +225,6 @@ const GroupDetailPage = () => {
               </button>
             </div>
 
-            {/* Expenses Tab */}
             {activeTab === 'expenses' && (
               <div className='card'>
                 <div className='card-header'>
@@ -261,7 +256,6 @@ const GroupDetailPage = () => {
               </div>
             )}
 
-            {/* Balances Tab */}
             {activeTab === 'balances' && (
               <div className='card'>
                 <div className='card-header'>
@@ -278,7 +272,6 @@ const GroupDetailPage = () => {
         </div>
       </div>
 
-      {/* Modals */}
       {showExpenseForm && (
         <ExpenseForm
           onClose={() => setShowExpenseForm(false)}
