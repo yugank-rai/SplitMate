@@ -21,13 +21,19 @@ connectDB();
 
 const app = express();
 const httpServer = http.createServer(app);
+
 const allowedOrigins = [
-  process.env.CLIENT_URL,
+  'https://split-mate-peach.vercel.app',
   'http://localhost:5173',
-];
+  process.env.CLIENT_URL,
+].filter(Boolean);
 
 export const io = new Server(httpServer, {
-  cors: { origin: process.env.CLIENT_URL, methods: ['GET', 'POST'] }
+  cors: {
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  }
 });
 
 app.use(cors({
@@ -39,6 +45,8 @@ app.use(cors({
     }
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use(helmet());
