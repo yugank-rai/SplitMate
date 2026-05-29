@@ -48,10 +48,10 @@ const DashboardPage = () => {
 
         <div className='dashboard-header'>
           <div>
-            <h1>Hello, {user?.name?.split(' ')[0]} 👋</h1>
+            <h1>Hello, {user?.name?.split(' ')[0]} </h1>
             <p>Here's your expense summary</p>
           </div>
-          <Link to='/expenses' className='btn btn-primary'>
+          <Link to='/Groups' className='btn btn-primary'>
             + Add Expense
           </Link>
         </div>
