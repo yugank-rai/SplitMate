@@ -24,21 +24,20 @@ const Navbar = ({ onMenuClick }) => {
           <Menu size={22} />
         </button>
         <Link to='/dashboard' className='navbar-brand'>
-          <span>💸</span>
+          <span></span>
           <span>SplitMate</span>
         </Link>
       </div>
 
       <div className='navbar-right'>
-        {/* Dark Mode Toggle */}
+      
         <button className='nav-icon-btn theme-toggle' onClick={toggleTheme} title='Toggle theme'>
           {darkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
-        {/* Notifications */}
         <NotificationBell />
 
-        {/* Avatar */}
+  
         <div className='nav-avatar-wrap'>
           <button
             className='nav-avatar-btn'

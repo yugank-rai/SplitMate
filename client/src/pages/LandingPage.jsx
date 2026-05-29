@@ -15,7 +15,7 @@ const features = [
     desc: 'Organize expenses by trips, home, office or any occasion with ease.',
   },
   {
-    icon: '💸',
+    icon: '',
     title: 'Split Expenses',
     desc: 'Split bills equally, by percentage or exact amounts — your choice.',
   },
@@ -69,7 +69,7 @@ const LandingPage = () => {
 
       <nav className='landing-nav'>
         <div className='landing-nav-brand'>
-          <span>💸</span>
+          <span></span>
           <span>SplitMate</span>
         </div>
         <div className='landing-nav-links'>
@@ -108,7 +108,7 @@ const LandingPage = () => {
 
   
     <div className='illus-center'>
-      <span>💸</span>
+      <span></span>
       <p>SplitMate</p>
     </div>
 
@@ -123,7 +123,7 @@ const LandingPage = () => {
     <div className='illus-card illus-card-2'>
       <span>✅</span>
       <div>
-        <p>Rahul paid</p>
+        <p>Yugank paid</p>
         <p>₹600</p>
       </div>
     </div>
@@ -218,7 +218,7 @@ const LandingPage = () => {
 
       <footer className='landing-footer'>
         <div className='footer-brand'>
-          <span>💸</span>
+          <span></span>
           <span>SplitMate</span>
         </div>
         <p>Split expenses effortlessly with friends & groups</p>
