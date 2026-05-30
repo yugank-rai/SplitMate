@@ -1,9 +1,5 @@
-// Simplifies debts between multiple people
-// Minimizes the number of transactions needed
 export const simplifyDebts = (balances) => {
-  // balances = [{ from, to, amount }]
   
-  // Calculate net balance for each person
   const netBalance = {};
   
   balances.forEach(({ from, to, amount }) => {
@@ -11,7 +7,6 @@ export const simplifyDebts = (balances) => {
     netBalance[to] = (netBalance[to] || 0) + amount;
   });
 
-  // Separate into creditors (positive) and debtors (negative)
   const creditors = [];
   const debtors = [];
 
@@ -22,7 +17,6 @@ export const simplifyDebts = (balances) => {
 
   const transactions = [];
 
-  // Greedily match debtors with creditors
   let i = 0, j = 0;
   while (i < debtors.length && j < creditors.length) {
     const debtor = debtors[i];

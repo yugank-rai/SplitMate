@@ -1,4 +1,3 @@
-// Calculate splits based on split type
 export const calculateSplits = (amount, members, splitType, customSplits) => {
   const splits = [];
 

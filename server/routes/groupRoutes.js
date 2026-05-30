@@ -11,7 +11,7 @@ import protect from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.use(protect); // All group routes are protected
+router.use(protect); 
 
 router.get('/', getGroups);
 router.post('/', createGroup);
