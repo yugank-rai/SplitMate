@@ -1,9 +1,10 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, User, Menu, X, Sun, Moon } from 'lucide-react';
+import { LogOut, User, Menu, Sun, Moon } from 'lucide-react';
 import useAuth from '../../hooks/useAuth.js';
 import NotificationBell from '../notifications/NotificationBell.jsx';
 import { ThemeContext } from '../../context/ThemeContext.jsx';
+import BrandLogo from './BrandLogo.jsx';
 import '../../styles/navbar.css';
 
 const Navbar = ({ onMenuClick }) => {
@@ -20,28 +21,26 @@ const Navbar = ({ onMenuClick }) => {
   return (
     <nav className='navbar'>
       <div className='navbar-left'>
-        <button className='menu-btn' onClick={onMenuClick}>
-          <Menu size={22} />
+        <button className='menu-btn' onClick={onMenuClick} aria-label='Open navigation menu'>
+          <Menu size={20} />
         </button>
-        <Link to='/dashboard' className='navbar-brand'>
-          <span></span>
-          <span>SplitMate</span>
+        <Link to='/dashboard' className='navbar-brand-link'>
+          <BrandLogo size={28} />
         </Link>
       </div>
 
       <div className='navbar-right'>
-      
         <button className='nav-icon-btn theme-toggle' onClick={toggleTheme} title='Toggle theme'>
-          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          {darkMode ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
         <NotificationBell />
 
-  
         <div className='nav-avatar-wrap'>
           <button
             className='nav-avatar-btn'
             onClick={() => setDropdownOpen(!dropdownOpen)}
+            aria-label='User profile menu'
           >
             {user?.avatar ? (
               <img src={user.avatar} alt='avatar' className='nav-avatar' />
@@ -63,20 +62,20 @@ const Navbar = ({ onMenuClick }) => {
                 className='nav-dropdown-item'
                 onClick={() => setDropdownOpen(false)}
               >
-                <User size={16} /> Profile
+                <User size={15} /> Profile
               </Link>
               <button
                 className='nav-dropdown-item'
                 onClick={toggleTheme}
               >
-                {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+                {darkMode ? <Sun size={15} /> : <Moon size={15} />}
                 {darkMode ? 'Light Mode' : 'Dark Mode'}
               </button>
               <button
                 className='nav-dropdown-item nav-dropdown-logout'
                 onClick={handleLogout}
               >
-                <LogOut size={16} /> Logout
+                <LogOut size={15} /> Logout
               </button>
             </div>
           )}

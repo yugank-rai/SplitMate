@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
 import { Users, Receipt } from 'lucide-react';
+import { getGroupTypeIcon } from '../../utils/appIcons.jsx';
 import '../../styles/groups.css';
 
 const GroupCard = ({ group }) => {
   return (
     <Link to={`/groups/${group._id}`} className='group-card'>
       <div className='group-card-header'>
-        <span className='group-card-icon'>{group.icon}</span>
+        <div className='group-card-icon-wrapper'>
+          {getGroupTypeIcon(group.type, 20)}
+        </div>
         <span className={`group-card-type group-type-${group.type.toLowerCase()}`}>
           {group.type}
         </span>
@@ -21,7 +24,7 @@ const GroupCard = ({ group }) => {
         </span>
         <span className='group-card-meta-item'>
           <Receipt size={14} />
-          {group.totalExpenses} expenses
+          {group.totalExpenses || 0} expenses
         </span>
       </div>
 

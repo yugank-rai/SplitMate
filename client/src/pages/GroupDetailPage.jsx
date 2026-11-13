@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { UserPlus, Trash2, ArrowLeft } from 'lucide-react';
+import { UserPlus, Trash2, ArrowLeft, Receipt, Scale, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import DashboardLayout from '../components/common/DashboardLayout.jsx';
 import ExpenseCard from '../components/expenses/ExpenseCard.jsx';
 import ExpenseForm from '../components/expenses/ExpenseForm.jsx';
 import BalanceSummary from '../components/settlements/BalanceSummary.jsx';
 import SettleUpModal from '../components/settlements/SettleUpModal.jsx';
+import { getGroupTypeIcon } from '../utils/appIcons.jsx';
 import { getGroupByIdApi, addMemberApi, deleteGroupApi } from '../api/groupApi.js';
 import { getExpensesApi, deleteExpenseApi } from '../api/expenseApi.js';
 import { getGroupBalancesApi } from '../api/settlementApi.js';
@@ -111,13 +112,15 @@ const GroupDetailPage = () => {
   return (
     <DashboardLayout>
       <div className='group-detail'>
+        <button className='back-btn' onClick={() => navigate('/groups')}>
+          <ArrowLeft size={16} /> Back to groups
+        </button>
 
         <div className='group-detail-header'>
-          <button className='back-btn' onClick={() => navigate('/groups')}>
-            <ArrowLeft size={20} /> Back
-          </button>
           <div className='group-detail-title'>
-            <span className='group-detail-icon'>{group?.icon}</span>
+            <div className='group-detail-icon-wrapper'>
+              {getGroupTypeIcon(group?.type, 24)}
+            </div>
             <div>
               <h1>{group?.name}</h1>
               <p>{group?.type} • {group?.members?.length} members</p>
@@ -125,7 +128,7 @@ const GroupDetailPage = () => {
           </div>
           {isAdmin && (
             <button className='btn-danger-outline' onClick={handleDeleteGroup}>
-              <Trash2 size={16} /> Delete Group
+              <Trash2 size={15} /> Delete Group
             </button>
           )}
         </div>
@@ -150,16 +153,16 @@ const GroupDetailPage = () => {
         </div>
 
         <div className='group-detail-body'>
-
           <div className='group-detail-members card'>
             <div className='card-header'>
               <h3>Members ({group?.members?.length})</h3>
               {isAdmin && (
                 <button
                   className='btn btn-outline'
+                  style={{ padding: '6px 12px', fontSize: '12.5px' }}
                   onClick={() => setShowAddMember(!showAddMember)}
                 >
-                  <UserPlus size={16} /> Add
+                  <UserPlus size={14} /> Add
                 </button>
               )}
             </div>
@@ -168,7 +171,7 @@ const GroupDetailPage = () => {
               <form onSubmit={handleAddMember} className='add-member-form'>
                 <input
                   type='email'
-                  placeholder='Enter email'
+                  placeholder='Enter member email...'
                   value={memberEmail}
                   onChange={(e) => setMemberEmail(e.target.value)}
                   required
@@ -177,6 +180,7 @@ const GroupDetailPage = () => {
                   type='submit'
                   className='btn btn-primary'
                   disabled={addingMember}
+                  style={{ padding: '8px 14px', fontSize: '13px' }}
                 >
                   {addingMember ? '...' : 'Add'}
                 </button>
@@ -209,38 +213,41 @@ const GroupDetailPage = () => {
           </div>
 
           <div className='group-detail-main'>
-
             <div className='group-tabs'>
               <button
                 className={`group-tab ${activeTab === 'expenses' ? 'group-tab-active' : ''}`}
                 onClick={() => setActiveTab('expenses')}
               >
-                🧾 Expenses ({expenses.length})
+                <Receipt size={15} />
+                <span>Expenses ({expenses.length})</span>
               </button>
               <button
                 className={`group-tab ${activeTab === 'balances' ? 'group-tab-active' : ''}`}
                 onClick={() => setActiveTab('balances')}
               >
-                ⚖️ Balances ({balances.length})
+                <Scale size={15} />
+                <span>Balances ({balances.length})</span>
               </button>
             </div>
 
             {activeTab === 'expenses' && (
               <div className='card'>
                 <div className='card-header'>
-                  <h3>All Expenses</h3>
+                  <h3>Group Expenses</h3>
                   <button
                     className='btn btn-primary'
                     onClick={() => setShowExpenseForm(true)}
                   >
-                    + Add Expense
+                    <Plus size={16} /> Add Expense
                   </button>
                 </div>
                 {expenses.length === 0 ? (
                   <div className='expenses-empty'>
-                    <span>🧾</span>
-                    <p>No expenses yet</p>
-                    <p>Add the first expense!</p>
+                    <div className='empty-icon-circle'>
+                      <Receipt size={24} strokeWidth={1.75} />
+                    </div>
+                    <p className='empty-title'>No expenses yet</p>
+                    <p className='empty-sub'>Record your first expense to begin splitting costs.</p>
                   </div>
                 ) : (
                   <div className='expenses-list'>
@@ -259,7 +266,7 @@ const GroupDetailPage = () => {
             {activeTab === 'balances' && (
               <div className='card'>
                 <div className='card-header'>
-                  <h3>Who Owes What</h3>
+                  <h3>Settlement Breakdown</h3>
                 </div>
                 <BalanceSummary
                   balances={balances}
@@ -268,7 +275,6 @@ const GroupDetailPage = () => {
               </div>
             )}
           </div>
-
         </div>
       </div>
 
@@ -288,7 +294,6 @@ const GroupDetailPage = () => {
           onSettled={fetchAll}
         />
       )}
-
     </DashboardLayout>
   );
 };

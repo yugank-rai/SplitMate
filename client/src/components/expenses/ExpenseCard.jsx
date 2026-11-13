@@ -1,6 +1,7 @@
-import { Trash2 } from 'lucide-react';
+import { Trash2, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import CategoryBadge from './CategoryBadge.jsx';
+import { getCategoryIcon } from '../../utils/appIcons.jsx';
 import useAuth from '../../hooks/useAuth.js';
 import '../../styles/expenses.css';
 
@@ -15,12 +16,7 @@ const ExpenseCard = ({ expense, onDelete }) => {
     <div className='expense-card'>
       <div className='expense-card-left'>
         <div className='expense-category-icon'>
-          {expense.category === 'Food' && '🍕'}
-          {expense.category === 'Travel' && '✈️'}
-          {expense.category === 'Rent' && '🏠'}
-          {expense.category === 'Shopping' && '🛒'}
-          {expense.category === 'Entertainment' && '🎬'}
-          {expense.category === 'Other' && '📦'}
+          {getCategoryIcon(expense.category, 20)}
         </div>
         <div className='expense-card-info'>
           <h4 className='expense-card-title'>{expense.title}</h4>
@@ -37,7 +33,10 @@ const ExpenseCard = ({ expense, onDelete }) => {
             </strong>
           </p>
           {expense.note && (
-            <p className='expense-card-note'>📝 {expense.note}</p>
+            <p className='expense-card-note'>
+              <FileText size={12} />
+              <span>{expense.note}</span>
+            </p>
           )}
         </div>
       </div>
@@ -49,7 +48,7 @@ const ExpenseCard = ({ expense, onDelete }) => {
         {mySplit && (
           <p className={`expense-my-share ${paidByMe ? 'share-positive' : 'share-negative'}`}>
             {paidByMe
-              ? 'You paid'
+              ? 'You paid full'
               : `Your share: ₹${mySplit?.amount?.toLocaleString()}`}
           </p>
         )}
@@ -58,8 +57,9 @@ const ExpenseCard = ({ expense, onDelete }) => {
             className='expense-delete-btn'
             onClick={() => onDelete(expense._id)}
             title='Delete expense'
+            aria-label='Delete expense'
           >
-            <Trash2 size={15} />
+            <Trash2 size={14} />
           </button>
         )}
       </div>

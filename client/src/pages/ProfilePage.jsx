@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User, Lock, Mail, Edit2, Check, X } from 'lucide-react';
+import { User, Lock, Mail, Edit2, Check, X, Users, Receipt, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import DashboardLayout from '../components/common/DashboardLayout.jsx';
 import useAuth from '../hooks/useAuth.js';
@@ -128,28 +128,28 @@ const ProfilePage = () => {
               <h3>Your Stats</h3>
               <div className='profile-stats'>
                 <div className='profile-stat'>
-                  <span className='profile-stat-icon'>👥</span>
+                  <span className='profile-stat-icon'><Users size={16} /></span>
                   <div>
                     <p className='profile-stat-value'>{stats?.totalGroups || 0}</p>
                     <p className='profile-stat-label'>Groups</p>
                   </div>
                 </div>
                 <div className='profile-stat'>
-                  <span className='profile-stat-icon'>🧾</span>
+                  <span className='profile-stat-icon'><Receipt size={16} /></span>
                   <div>
                     <p className='profile-stat-value'>{stats?.totalExpenses || 0}</p>
                     <p className='profile-stat-label'>Expenses</p>
                   </div>
                 </div>
                 <div className='profile-stat'>
-                  <span className='profile-stat-icon'>💰</span>
+                  <span className='profile-stat-icon'><ArrowDownLeft size={16} color='var(--accent)' /></span>
                   <div>
                     <p className='profile-stat-value'>₹{stats?.totalOwed || 0}</p>
                     <p className='profile-stat-label'>Owed to you</p>
                   </div>
                 </div>
                 <div className='profile-stat'>
-                  <span className='profile-stat-icon'>💸</span>
+                  <span className='profile-stat-icon'><ArrowUpRight size={16} color='var(--danger)' /></span>
                   <div>
                     <p className='profile-stat-value'>₹{stats?.totalOwe || 0}</p>
                     <p className='profile-stat-label'>You owe</p>
