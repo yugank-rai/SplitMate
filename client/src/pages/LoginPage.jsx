@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuth from '../hooks/useAuth.js';
 import { loginApi } from '../api/authApi.js';
+import BrandLogo from '../components/common/BrandLogo.jsx';
 import '../styles/auth.css';
 
 const LoginPage = () => {
@@ -34,31 +36,47 @@ const LoginPage = () => {
   return (
     <div className='auth-wrapper'>
       <div className='auth-left'>
-        <div className='auth-brand'>
-          <span className='auth-logo'>💸</span>
-          <h1>SplitMate</h1>
+        <div className='auth-brand-container'>
+          <BrandLogo size={36} />
         </div>
-        <h2>Split expenses effortlessly with friends & groups</h2>
+        <h2 className='auth-hero-heading'>
+          Clear, effortless expense tracking for groups and shared bills
+        </h2>
+        <p className='auth-hero-desc'>
+          Split living costs, trips, and nights out accurately without spreadsheets or confusion.
+        </p>
         <ul className='auth-features'>
-          <li>✅ Track shared expenses instantly</li>
-          <li>✅ Settle debts with one click</li>
-          <li>✅ Real-time notifications</li>
-          <li>✅ Smart debt simplification</li>
+          <li>
+            <span className='auth-check-icon'><Check size={14} strokeWidth={2.5} /></span>
+            <span>Real-time expense logging across devices</span>
+          </li>
+          <li>
+            <span className='auth-check-icon'><Check size={14} strokeWidth={2.5} /></span>
+            <span>One-click settlement and payment confirmation</span>
+          </li>
+          <li>
+            <span className='auth-check-icon'><Check size={14} strokeWidth={2.5} /></span>
+            <span>Smart debt reduction algorithm minimizes transactions</span>
+          </li>
+          <li>
+            <span className='auth-check-icon'><Check size={14} strokeWidth={2.5} /></span>
+            <span>Instant notification alerts when bills are logged</span>
+          </li>
         </ul>
       </div>
 
       <div className='auth-right'>
         <div className='auth-card'>
-          <h2>Welcome Back! 👋</h2>
-          <p className='auth-subtitle'>Login to your account</p>
+          <h2>Sign in</h2>
+          <p className='auth-subtitle'>Enter your credentials to access your account</p>
 
           <form onSubmit={handleSubmit}>
             <div className='form-group'>
-              <label>Email</label>
+              <label>Email address</label>
               <input
                 type='email'
                 name='email'
-                placeholder='yugan@gmail.com'
+                placeholder='you@example.com'
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -66,7 +84,10 @@ const LoginPage = () => {
             </div>
 
             <div className='form-group'>
-              <label>Password</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label>Password</label>
+                <Link to='/forgot-password' className='auth-inline-link'>Forgot password?</Link>
+              </div>
               <input
                 type='password'
                 name='password'
@@ -77,22 +98,18 @@ const LoginPage = () => {
               />
             </div>
 
-            <div className='auth-forgot'>
-              <Link to='/forgot-password'>Forgot password?</Link>
-            </div>
-
             <button
               type='submit'
               className='btn btn-primary btn-full'
               disabled={loading}
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
           <p className='auth-switch'>
             Don't have an account?{' '}
-            <Link to='/register'>Sign up free</Link>
+            <Link to='/register'>Create account</Link>
           </p>
         </div>
       </div>

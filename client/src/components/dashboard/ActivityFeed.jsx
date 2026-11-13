@@ -1,3 +1,4 @@
+import { Inbox } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import '../../styles/dashboard.css';
 
@@ -5,9 +6,11 @@ const ActivityFeed = ({ activities }) => {
   if (!activities || activities.length === 0) {
     return (
       <div className='activity-empty'>
-        <span>📭</span>
-        <p>No recent activity yet</p>
-        <p>Create a group and add expenses to see activity here!</p>
+        <div className='empty-icon-circle'>
+          <Inbox size={24} strokeWidth={1.75} />
+        </div>
+        <p className='empty-title'>No recent activity yet</p>
+        <p className='empty-sub'>Create a group and log expenses to track shared actions here.</p>
       </div>
     );
   }

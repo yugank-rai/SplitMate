@@ -1,18 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { Bell, Check, Trash2 } from 'lucide-react';
+import { Bell, Check, Trash2, ArrowRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import useNotifications from '../../hooks/useNotifications.js';
 import { markAsReadApi, deleteNotificationApi } from '../../api/notificationApi.js';
+import { getNotificationIcon } from '../../utils/appIcons.jsx';
 import '../../styles/notifications.css';
-
-const TYPE_ICONS = {
-  expense_added:  '🧾',
-  expense_deleted: '🗑️',
-  settled_up:     '✅',
-  group_joined:   '👥',
-  member_added:   '👤',
-};
 
 const NotificationBell = () => {
   const [open, setOpen] = useState(false);
@@ -60,8 +53,9 @@ const NotificationBell = () => {
       <button
         className='nav-icon-btn'
         onClick={() => setOpen(!open)}
+        aria-label='Notifications'
       >
-        <Bell size={20} />
+        <Bell size={18} />
         {unreadCount > 0 && (
           <span className='notif-badge'>{unreadCount > 9 ? '9+' : unreadCount}</span>
         )}
@@ -73,7 +67,7 @@ const NotificationBell = () => {
             <h3>Notifications</h3>
             {unreadCount > 0 && (
               <button className='notif-mark-all' onClick={markAllRead}>
-                <Check size={14} /> Mark all read
+                <Check size={13} /> Mark all read
               </button>
             )}
           </div>
@@ -81,8 +75,11 @@ const NotificationBell = () => {
           <div className='notif-list'>
             {notifications.length === 0 ? (
               <div className='notif-empty'>
-                <span>🔔</span>
-                <p>No notifications yet</p>
+                <div className='empty-icon-circle'>
+                  <Bell size={20} strokeWidth={1.75} />
+                </div>
+                <p className='empty-title'>No notifications</p>
+                <p className='empty-sub'>You're all caught up with group updates.</p>
               </div>
             ) : (
               notifications.map((notif) => (
@@ -92,13 +89,13 @@ const NotificationBell = () => {
                   onClick={() => handleNotifClick(notif)}
                 >
                   <div className='notif-item-icon'>
-                    {TYPE_ICONS[notif.type] || '🔔'}
+                    {getNotificationIcon(notif.type, 16)}
                   </div>
                   <div className='notif-item-content'>
                     <p className='notif-item-message'>{notif.message}</p>
                     {notif.group && (
                       <p className='notif-item-group'>
-                        {notif.group.icon} {notif.group.name}
+                        {notif.group.name}
                       </p>
                     )}
                     <p className='notif-item-time'>
@@ -110,6 +107,7 @@ const NotificationBell = () => {
                   <button
                     className='notif-delete-btn'
                     onClick={(e) => handleDelete(e, notif._id)}
+                    aria-label='Delete notification'
                   >
                     <Trash2 size={13} />
                   </button>
@@ -120,7 +118,8 @@ const NotificationBell = () => {
 
           <div className='notif-footer'>
             <button onClick={() => { navigate('/notifications'); setOpen(false); }}>
-              View all notifications →
+              <span>View all notifications</span>
+              <ArrowRight size={13} />
             </button>
           </div>
         </div>

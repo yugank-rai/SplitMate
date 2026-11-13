@@ -8,15 +8,16 @@ import {
   UserCircle,
   X,
 } from 'lucide-react';
+import BrandLogo from './BrandLogo.jsx';
 import '../../styles/sidebar.css';
 
 const navItems = [
-  { to: '/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
-  { to: '/groups', icon: <Users size={20} />, label: 'Groups' },
-  { to: '/expenses', icon: <Receipt size={20} />, label: 'Expenses' },
-  { to: '/balances', icon: <ArrowLeftRight size={20} />, label: 'Balances' },
-  { to: '/notifications', icon: <Bell size={20} />, label: 'Notifications' },
-  { to: '/profile', icon: <UserCircle size={20} />, label: 'Profile' },
+  { to: '/dashboard', icon: <LayoutDashboard size={18} />, label: 'Dashboard' },
+  { to: '/groups', icon: <Users size={18} />, label: 'Groups' },
+  { to: '/expenses', icon: <Receipt size={18} />, label: 'Expenses' },
+  { to: '/balances', icon: <ArrowLeftRight size={18} />, label: 'Balances' },
+  { to: '/notifications', icon: <Bell size={18} />, label: 'Notifications' },
+  { to: '/profile', icon: <UserCircle size={18} />, label: 'Profile' },
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -25,9 +26,9 @@ const Sidebar = ({ isOpen, onClose }) => {
       {isOpen && <div className='sidebar-overlay' onClick={onClose} />}
       <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
         <div className='sidebar-header'>
-          <span className='sidebar-brand'>💸 SplitMate</span>
-          <button className='sidebar-close' onClick={onClose}>
-            <X size={20} />
+          <BrandLogo size={24} />
+          <button className='sidebar-close' onClick={onClose} aria-label='Close sidebar'>
+            <X size={18} />
           </button>
         </div>
 
@@ -41,14 +42,17 @@ const Sidebar = ({ isOpen, onClose }) => {
               }
               onClick={onClose}
             >
-              {item.icon}
+              <span className='sidebar-item-icon'>{item.icon}</span>
               <span>{item.label}</span>
             </NavLink>
           ))}
         </nav>
 
         <div className='sidebar-footer'>
-          <p>SplitMate v1.0.0</p>
+          <div className='sidebar-status-pill'>
+            <span className='sidebar-status-dot' />
+            <span>SplitMate Standard</span>
+          </div>
         </div>
       </aside>
     </>

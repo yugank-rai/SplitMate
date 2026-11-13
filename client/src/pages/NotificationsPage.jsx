@@ -1,18 +1,11 @@
-import { Check, Trash2 } from 'lucide-react';
+import { Check, Trash2, Bell } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../components/common/DashboardLayout.jsx';
 import useNotifications from '../hooks/useNotifications.js';
 import { markAsReadApi, deleteNotificationApi } from '../api/notificationApi.js';
+import { getNotificationIcon } from '../utils/appIcons.jsx';
 import '../styles/notifications.css';
-
-const TYPE_ICONS = {
-  expense_added:   '🧾',
-  expense_deleted: '🗑️',
-  settled_up:      '✅',
-  group_joined:    '👥',
-  member_added:    '👤',
-};
 
 const TYPE_LABELS = {
   expense_added:   'Expense Added',
@@ -58,27 +51,26 @@ const NotificationsPage = () => {
   return (
     <DashboardLayout>
       <div className='notifications-page'>
-
-        {/* Header */}
         <div className='page-header'>
           <div>
             <h1>Notifications</h1>
-            <p>{unreadCount > 0 ? `${unreadCount} unread` : 'All caught up!'}</p>
+            <p>{unreadCount > 0 ? `${unreadCount} unread update${unreadCount > 1 ? 's' : ''}` : 'All caught up'}</p>
           </div>
           {unreadCount > 0 && (
             <button className='btn btn-outline' onClick={markAllRead}>
-              <Check size={16} /> Mark all read
+              <Check size={15} /> Mark all read
             </button>
           )}
         </div>
 
-        {/* Notifications List */}
         <div className='notifications-list card'>
           {notifications.length === 0 ? (
             <div className='notif-page-empty'>
-              <span>🔔</span>
+              <div className='empty-icon-circle'>
+                <Bell size={24} strokeWidth={1.75} />
+              </div>
               <h3>No notifications yet</h3>
-              <p>When someone adds an expense or settles up, you'll see it here</p>
+              <p>When someone logs a new bill or records a settlement, you will see it here.</p>
             </div>
           ) : (
             notifications.map((notif) => (
@@ -88,13 +80,13 @@ const NotificationsPage = () => {
                 onClick={() => handleClick(notif)}
               >
                 <div className='notif-page-icon'>
-                  {TYPE_ICONS[notif.type] || '🔔'}
+                  {getNotificationIcon(notif.type, 18)}
                 </div>
 
                 <div className='notif-page-content'>
                   <div className='notif-page-top'>
                     <span className='notif-type-label'>
-                      {TYPE_LABELS[notif.type]}
+                      {TYPE_LABELS[notif.type] || 'Activity'}
                     </span>
                     {!notif.isRead && (
                       <span className='notif-unread-dot' />
@@ -103,7 +95,7 @@ const NotificationsPage = () => {
                   <p className='notif-page-message'>{notif.message}</p>
                   {notif.group && (
                     <p className='notif-page-group'>
-                      {notif.group.icon} {notif.group.name}
+                      {notif.group.name}
                     </p>
                   )}
                   <p className='notif-page-time'>
@@ -119,6 +111,7 @@ const NotificationsPage = () => {
                       className='notif-read-btn'
                       onClick={(e) => { e.stopPropagation(); handleMarkRead(notif._id); }}
                       title='Mark as read'
+                      aria-label='Mark as read'
                     >
                       <Check size={14} />
                     </button>
@@ -127,6 +120,7 @@ const NotificationsPage = () => {
                     className='notif-del-btn'
                     onClick={(e) => { e.stopPropagation(); handleDelete(notif._id); }}
                     title='Delete'
+                    aria-label='Delete'
                   >
                     <Trash2 size={14} />
                   </button>
@@ -135,7 +129,6 @@ const NotificationsPage = () => {
             ))
           )}
         </div>
-
       </div>
     </DashboardLayout>
   );

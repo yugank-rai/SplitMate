@@ -3,14 +3,10 @@ import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { addExpenseApi } from '../../api/expenseApi.js';
 import useAuth from '../../hooks/useAuth.js';
+import { getCategoryIcon, getSplitTypeIcon } from '../../utils/appIcons.jsx';
 import '../../styles/expenses.css';
 
 const CATEGORIES = ['Food', 'Travel', 'Rent', 'Shopping', 'Entertainment', 'Other'];
-
-const CATEGORY_ICONS = {
-  Food: '🍕', Travel: '✈️', Rent: '🏠',
-  Shopping: '🛒', Entertainment: '🎬', Other: '📦',
-};
 
 const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
   const { user } = useAuth();
@@ -68,19 +64,18 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
       <div className='modal expense-modal' onClick={(e) => e.stopPropagation()}>
         <div className='modal-header'>
           <h2>Add Expense</h2>
-          <button className='modal-close' onClick={onClose}>
-            <X size={20} />
+          <button className='modal-close' onClick={onClose} aria-label='Close'>
+            <X size={18} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit}>
-
           <div className='form-group'>
             <label>Title</label>
             <input
               type='text'
               name='title'
-              placeholder='e.g. Hotel Booking, Dinner...'
+              placeholder='e.g. Dinner, Groceries, Hotel booking...'
               value={formData.title}
               onChange={handleChange}
               required
@@ -96,7 +91,8 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
                 placeholder='0.00'
                 value={formData.amount}
                 onChange={handleChange}
-                min='0'
+                min='0.01'
+                step='any'
                 required
               />
             </div>
@@ -121,7 +117,8 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
                   className={`category-btn ${formData.category === cat ? 'category-btn-active' : ''}`}
                   onClick={() => setFormData({ ...formData, category: cat })}
                 >
-                  {CATEGORY_ICONS[cat]} {cat}
+                  <span className='category-btn-icon'>{getCategoryIcon(cat, 15)}</span>
+                  <span>{cat}</span>
                 </button>
               ))}
             </div>
@@ -146,16 +143,19 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
           <div className='form-group'>
             <label>Split Type</label>
             <div className='split-type-selector'>
-              {['equal', 'exact', 'percentage'].map((type) => (
+              {[
+                { type: 'equal', label: 'Equal' },
+                { type: 'exact', label: 'Exact' },
+                { type: 'percentage', label: 'Percent' },
+              ].map(({ type, label }) => (
                 <button
                   key={type}
                   type='button'
                   className={`split-type-btn ${formData.splitType === type ? 'split-type-active' : ''}`}
                   onClick={() => handleSplitTypeChange(type)}
                 >
-                  {type === 'equal' && '⚖️ Equal'}
-                  {type === 'exact' && '💰 Exact'}
-                  {type === 'percentage' && '% Percent'}
+                  <span className='split-type-icon'>{getSplitTypeIcon(type, 14)}</span>
+                  <span>{label}</span>
                 </button>
               ))}
             </div>
@@ -193,7 +193,7 @@ const ExpenseForm = ({ onClose, onExpenseAdded, group }) => {
             <input
               type='text'
               name='note'
-              placeholder='Add a note...'
+              placeholder='Add a reference note...'
               value={formData.note}
               onChange={handleChange}
             />

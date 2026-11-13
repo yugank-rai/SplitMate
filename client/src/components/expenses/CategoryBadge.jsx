@@ -1,19 +1,14 @@
+import { getCategoryIcon } from '../../utils/appIcons.jsx';
 import '../../styles/expenses.css';
 
-const CATEGORY_CONFIG = {
-  Food:          { icon: '🍕', color: 'food' },
-  Travel:        { icon: '✈️', color: 'travel' },
-  Rent:          { icon: '🏠', color: 'rent' },
-  Shopping:      { icon: '🛒', color: 'shopping' },
-  Entertainment: { icon: '🎬', color: 'entertainment' },
-  Other:         { icon: '📦', color: 'other' },
-};
-
 const CategoryBadge = ({ category }) => {
-  const config = CATEGORY_CONFIG[category] || CATEGORY_CONFIG.Other;
+  const cat = category || 'Other';
+  const colorKey = cat.toLowerCase();
+
   return (
-    <span className={`category-badge category-${config.color}`}>
-      {config.icon} {category}
+    <span className={`category-badge category-${colorKey}`}>
+      <span className='category-badge-icon'>{getCategoryIcon(cat, 13)}</span>
+      <span>{cat}</span>
     </span>
   );
 };

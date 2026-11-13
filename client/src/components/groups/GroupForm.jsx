@@ -2,25 +2,21 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { createGroupApi } from '../../api/groupApi.js';
+import { getGroupTypeIcon } from '../../utils/appIcons.jsx';
 import '../../styles/groups.css';
 
-const GROUP_ICONS = {
-  Trip: '🏔️',
-  Home: '🏠',
-  Office: '💼',
-  Other: '👥',
-};
+const GROUP_TYPES = ['Trip', 'Home', 'Office', 'Other'];
 
 const GroupForm = ({ onClose, onGroupCreated }) => {
   const [formData, setFormData] = useState({
     name: '',
     type: 'Other',
-    icon: '👥',
+    icon: 'Other',
   });
   const [loading, setLoading] = useState(false);
 
   const handleTypeChange = (type) => {
-    setFormData({ ...formData, type, icon: GROUP_ICONS[type] });
+    setFormData({ ...formData, type, icon: type });
   };
 
   const handleSubmit = async (e) => {
@@ -43,8 +39,8 @@ const GroupForm = ({ onClose, onGroupCreated }) => {
       <div className='modal' onClick={(e) => e.stopPropagation()}>
         <div className='modal-header'>
           <h2>Create New Group</h2>
-          <button className='modal-close' onClick={onClose}>
-            <X size={20} />
+          <button className='modal-close' onClick={onClose} aria-label='Close'>
+            <X size={18} />
           </button>
         </div>
 
@@ -53,7 +49,7 @@ const GroupForm = ({ onClose, onGroupCreated }) => {
             <label>Group Name</label>
             <input
               type='text'
-              placeholder='e.g. Manali Trip, Flat Expenses...'
+              placeholder='e.g. Goa Trip, Flat 402, Office Lunch...'
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
@@ -65,7 +61,7 @@ const GroupForm = ({ onClose, onGroupCreated }) => {
           <div className='form-group'>
             <label>Group Type</label>
             <div className='group-type-selector'>
-              {Object.entries(GROUP_ICONS).map(([type, icon]) => (
+              {GROUP_TYPES.map((type) => (
                 <button
                   key={type}
                   type='button'
@@ -74,7 +70,9 @@ const GroupForm = ({ onClose, onGroupCreated }) => {
                   }`}
                   onClick={() => handleTypeChange(type)}
                 >
-                  <span>{icon}</span>
+                  <span className='group-type-btn-icon'>
+                    {getGroupTypeIcon(type, 16)}
+                  </span>
                   <span>{type}</span>
                 </button>
               ))}

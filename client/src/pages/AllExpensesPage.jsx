@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { Search, Receipt, Layers } from 'lucide-react';
 import DashboardLayout from '../components/common/DashboardLayout.jsx';
 import CategoryBadge from '../components/expenses/CategoryBadge.jsx';
+import { getCategoryIcon } from '../utils/appIcons.jsx';
 import { getAllExpensesApi } from '../api/expenseApi.js';
 import useAuth from '../hooks/useAuth.js';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 const CATEGORIES = ['All', 'Food', 'Travel', 'Rent', 'Shopping', 'Entertainment', 'Other'];
-
-const CATEGORY_ICONS = {
-  Food: '🍕', Travel: '✈️', Rent: '🏠',
-  Shopping: '🛒', Entertainment: '🎬', Other: '📦',
-};
 
 const AllExpensesPage = () => {
   const { user } = useAuth();
@@ -62,66 +59,87 @@ const AllExpensesPage = () => {
 
   return (
     <DashboardLayout>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-
+      <div style={{ maxWidth: '920px', margin: '0 auto' }}>
         <div className='page-header'>
           <div>
             <h1>All Expenses</h1>
-            <p>Every expense across all your groups</p>
+            <p>Every recorded expense across your groups</p>
           </div>
         </div>
 
         {!loading && (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+          <div className='card' style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '18px 24px',
+            marginBottom: '20px',
+            flexWrap: 'wrap',
             gap: '16px',
-            marginBottom: '24px'
           }}>
-            <div className='card' style={{ padding: '20px', textAlign: 'center' }}>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '6px' }}>
-                Total Expenses
+            <div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '2px' }}>
+                Your Aggregate Share
               </p>
-              <p style={{ fontSize: '28px', fontWeight: '800' }}>{expenses.length}</p>
-            </div>
-            <div className='card' style={{ padding: '20px', textAlign: 'center' }}>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '6px' }}>
-                Your Total Share
-              </p>
-              <p style={{ fontSize: '28px', fontWeight: '800', color: 'var(--danger)' }}>
+              <p style={{ fontSize: '24px', fontWeight: '800', color: 'var(--danger)' }}>
                 ₹{totalSpent.toLocaleString()}
               </p>
             </div>
-            <div className='card' style={{ padding: '20px', textAlign: 'center' }}>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '6px' }}>
-                Categories Used
-              </p>
-              <p style={{ fontSize: '28px', fontWeight: '800' }}>
-                {new Set(expenses.map(e => e.category)).size}
-              </p>
+
+            <div style={{ display: 'flex', gap: '28px', alignItems: 'center' }}>
+              <div>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 500 }}>
+                  Total Expenses
+                </p>
+                <p style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)' }}>
+                  {expenses.length}
+                </p>
+              </div>
+
+              <div style={{ width: '1px', height: '32px', background: 'var(--border)' }} />
+
+              <div>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 500 }}>
+                  Categories Used
+                </p>
+                <p style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)' }}>
+                  {new Set(expenses.map(e => e.category)).size}
+                </p>
+              </div>
             </div>
           </div>
         )}
 
-        <div className='card' style={{ padding: '16px', marginBottom: '20px' }}>
-      
-          <input
-            type='text'
-            placeholder='🔍 Search expenses...'
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '10px 16px',
-              border: '2px solid var(--border)',
-              borderRadius: 'var(--radius)',
-              fontSize: '14px',
-              marginBottom: '12px',
-              background: 'var(--bg)',
-              color: 'var(--text-primary)',
-              outline: 'none',
-            }}
-          />
+        {/* Filter & Search Bar */}
+        <div className='card' style={{ padding: '16px 20px', marginBottom: '20px' }}>
+          <div style={{ position: 'relative', marginBottom: '14px' }}>
+            <Search
+              size={17}
+              style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'var(--text-muted)',
+              }}
+            />
+            <input
+              type='text'
+              placeholder='Search by expense title...'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '9px 12px 9px 38px',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '14px',
+                background: '#FFFFFF',
+                color: 'var(--text-primary)',
+                outline: 'none',
+              }}
+            />
+          </div>
 
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {CATEGORIES.map((cat) => (
@@ -129,28 +147,34 @@ const AllExpensesPage = () => {
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 style={{
-                  padding: '6px 14px',
-                  borderRadius: '20px',
-                  border: '2px solid',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '6px 12px',
+                  borderRadius: '16px',
+                  border: '1px solid',
                   borderColor: selectedCategory === cat ? 'var(--primary)' : 'var(--border)',
-                  background: selectedCategory === cat ? 'var(--primary)' : 'transparent',
-                  color: selectedCategory === cat ? 'white' : 'var(--text-secondary)',
-                  fontSize: '13px',
+                  background: selectedCategory === cat ? 'var(--primary)' : '#FFFFFF',
+                  color: selectedCategory === cat ? '#FFFFFF' : 'var(--text-secondary)',
+                  fontSize: '12.5px',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  transition: 'all 0.2s',
+                  transition: 'all 0.15s',
                 }}
               >
-                {cat !== 'All' && CATEGORY_ICONS[cat]} {cat}
+                {cat !== 'All' && getCategoryIcon(cat, 13, selectedCategory === cat ? '#FFFFFF' : 'currentColor')}
+                <span>{cat}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className='card' style={{ padding: '8px' }}>
+        {/* Expense List */}
+        <div className='card' style={{ padding: '12px' }}>
           {loading ? (
             <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-              Loading...
+              <div className='spinner' style={{ margin: '0 auto 12px' }} />
+              <p style={{ fontSize: '14px' }}>Loading expenses...</p>
             </div>
           ) : filtered.length === 0 ? (
             <div style={{
@@ -158,11 +182,13 @@ const AllExpensesPage = () => {
               textAlign: 'center',
               color: 'var(--text-secondary)'
             }}>
-              <p style={{ fontSize: '48px', marginBottom: '12px' }}>🧾</p>
-              <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '8px' }}>
+              <div className='empty-icon-circle' style={{ margin: '0 auto 12px' }}>
+                <Receipt size={24} strokeWidth={1.75} />
+              </div>
+              <p style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '4px' }}>
                 No expenses found
               </p>
-              <p>Try a different filter or add expenses in your groups</p>
+              <p style={{ fontSize: '13px' }}>Try a different filter or record expenses within your groups.</p>
             </div>
           ) : (
             filtered.map((expense) => {
@@ -175,56 +201,64 @@ const AllExpensesPage = () => {
                   to={`/groups/${expense.group?._id}`}
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '14px',
-                    padding: '16px',
-                    borderBottom: '1px solid var(--border)',
-                    transition: 'background 0.2s',
-                    borderRadius: 'var(--radius)',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'var(--bg)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '14px',
+                      padding: '14px 16px',
+                      borderBottom: '1px solid var(--border)',
+                      transition: 'background 0.15s ease',
+                      borderRadius: 'var(--radius-sm)',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#FFFFFF'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                   >
                     <div style={{
-                      width: '48px', height: '48px',
-                      background: 'var(--bg)',
-                      borderRadius: '12px',
-                      display: 'flex', alignItems: 'center',
+                      width: '42px',
+                      height: '42px',
+                      background: '#FFFFFF',
+                      border: '1px solid var(--border)',
+                      borderRadius: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '24px', flexShrink: 0,
+                      color: 'var(--primary)',
+                      flexShrink: 0,
                     }}>
-                      {CATEGORY_ICONS[expense.category] || '📦'}
+                      {getCategoryIcon(expense.category, 20)}
                     </div>
 
-                    <div style={{ flex: 1 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                        <p style={{ fontWeight: '700', fontSize: '15px' }}>{expense.title}</p>
+                        <p style={{ fontWeight: '700', fontSize: '14.5px', color: 'var(--text-primary)' }}>
+                          {expense.title}
+                        </p>
                         <CategoryBadge category={expense.category} />
                       </div>
-                      <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
                         <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                           {format(new Date(expense.date), 'dd MMM yyyy')}
                         </p>
                         <p style={{ fontSize: '12px', color: 'var(--primary)', fontWeight: '600' }}>
-                          {expense.group?.icon} {expense.group?.name}
+                          {expense.group?.name}
                         </p>
                       </div>
-                      <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                      <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                         Paid by <strong>{paidByMe ? 'You' : expense.paidBy?.name}</strong>
                       </p>
                     </div>
 
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <p style={{ fontSize: '18px', fontWeight: '800' }}>
+                      <p style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>
                         ₹{expense.amount.toLocaleString()}
                       </p>
                       {mySplit && (
                         <p style={{
-                          fontSize: '13px', fontWeight: '600',
-                          color: paidByMe ? 'var(--success)' : 'var(--danger)',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          color: paidByMe ? 'var(--accent)' : 'var(--danger)',
                         }}>
                           {paidByMe ? 'You paid' : `Your share: ₹${mySplit.amount.toLocaleString()}`}
                         </p>
@@ -236,7 +270,6 @@ const AllExpensesPage = () => {
             })
           )}
         </div>
-
       </div>
     </DashboardLayout>
   );

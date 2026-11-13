@@ -1,3 +1,4 @@
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import useAuth from '../../hooks/useAuth.js';
 import '../../styles/settlements.css';
 
@@ -7,9 +8,11 @@ const BalanceSummary = ({ balances, onSettleUp }) => {
   if (!balances || balances.length === 0) {
     return (
       <div className='balances-empty'>
-        <span>✅</span>
-        <p>All settled up!</p>
-        <p>No pending balances in this group</p>
+        <div className='empty-icon-circle' style={{ color: 'var(--accent)' }}>
+          <CheckCircle2 size={24} strokeWidth={2} />
+        </div>
+        <p className='empty-title'>All settled up</p>
+        <p className='empty-sub'>No pending balances or repayments in this group.</p>
       </div>
     );
   }
@@ -24,10 +27,10 @@ const BalanceSummary = ({ balances, onSettleUp }) => {
           <div key={index} className='balance-item'>
             <div className='balance-item-info'>
               <div className='balance-avatars'>
-                <div className='balance-avatar'>
+                <div className='balance-avatar balance-avatar-from'>
                   {balance.from?.name?.charAt(0).toUpperCase()}
                 </div>
-                <div className='balance-arrow'>→</div>
+                <ArrowRight size={14} color='var(--text-muted)' />
                 <div className='balance-avatar balance-avatar-to'>
                   {balance.to?.name?.charAt(0).toUpperCase()}
                 </div>

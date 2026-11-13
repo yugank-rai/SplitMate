@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import DashboardLayout from '../components/common/DashboardLayout.jsx';
 import GroupCard from '../components/groups/GroupCard.jsx';
@@ -34,37 +34,39 @@ const GroupsPage = () => {
   return (
     <DashboardLayout>
       <div className='groups-page'>
-
         <div className='page-header'>
           <div>
-            <h1>My Groups</h1>
-            <p>Manage your expense groups</p>
+            <h1>Groups</h1>
+            <p>Organize shared expenses across flatmates, trips, and friends</p>
           </div>
           <button
             className='btn btn-primary'
             onClick={() => setShowForm(true)}
           >
-            <Plus size={18} />
-            New Group
+            <Plus size={16} />
+            Create Group
           </button>
         </div>
 
         {loading ? (
           <div className='groups-loading'>
             {[1, 2, 3].map((i) => (
-              <div key={i} className='group-card-skeleton' />
+              <div key={i} className='group-card-skeleton skeleton' />
             ))}
           </div>
         ) : groups.length === 0 ? (
-          <div className='groups-empty'>
-            <span className='groups-empty-icon'>👥</span>
+          <div className='groups-empty card'>
+            <div className='empty-icon-circle'>
+              <Users size={24} strokeWidth={1.75} />
+            </div>
             <h3>No groups yet</h3>
-            <p>Create a group to start splitting expenses</p>
+            <p>Create a shared group to start logging expenses with other people.</p>
             <button
               className='btn btn-primary'
               onClick={() => setShowForm(true)}
+              style={{ marginTop: '14px' }}
             >
-              <Plus size={18} />
+              <Plus size={16} />
               Create First Group
             </button>
           </div>
@@ -82,7 +84,6 @@ const GroupsPage = () => {
             onGroupCreated={handleGroupCreated}
           />
         )}
-
       </div>
     </DashboardLayout>
   );
